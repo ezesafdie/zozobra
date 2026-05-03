@@ -1,7 +1,6 @@
 #ifndef UTILS_H_INCLUDED
 #define UTILS_H_INCLUDED
 
-#include <stdbool.h>
 
 #define ANCHO_VGA 640
 #define ALTO_VGA 480
