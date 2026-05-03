@@ -1,22 +1,3 @@
-/**
-    INTEGRANTES DEL EQUIPO
-    -----------------
-    Apellido: Bentancur, Nahuel
-    DNI: 42998043
-    Usuario: NahuelBent
-    Entrega: Sí
-    -----------------
-    Apellido: Safdie, Ezequiel
-    DNI: 43016790
-    Usuario: ezesafdie
-    Entrega: Sí
-    -----------------
-    Apellido: Scevola, Emiliano
-    DNI: 42818488
-    Usuario: emilianosce
-    Entrega: Sí
-    -----------------
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "GBT/gbt.h"
