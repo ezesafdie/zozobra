@@ -1,4 +1,7 @@
 #include "utils.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 void leerArgumentos(int argc, char* argv[], int* anchoVentana, int* altoVentana, int* escala)
 {

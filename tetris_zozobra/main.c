@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "GBT/gbt.h"
+#include "utils.h"
 #define ANCHO_VGA 640
 #define ALTO_VGA 480
 #define ANCHO_CGA 320

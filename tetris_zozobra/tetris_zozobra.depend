@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1777838455 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\main.c
+1778213168 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\main.c
 	<stdio.h>
 	<stdlib.h>
 	"GBT/gbt.h"
@@ -29,5 +29,5 @@
 1777838455 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\utils.c
 	"utils.h"
 
-1777838479 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\utils.h
+1777838549 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\utils.h
 
