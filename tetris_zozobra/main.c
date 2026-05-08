@@ -20,15 +20,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "GBT/gbt.h"
-#define ANCHO_VENTANA 128
-#define ALTO_VENTANA 128
+#include "utils.h"
+#define ANCHO_VGA 640
+#define ALTO_VGA 480
+#define ANCHO_CGA 320
+#define ALTO_CGA 200
 #define ESCALA_VENTANA 5
 #define CANT_COLORES 16
 #define TAM_GRILLA 11
 
-int main()
+int main(int argc, char* argv[])
 {
     printf("Hello world!\n");
+
+    int anchoVentana = ANCHO_VGA;
+    int altoVentana = ALTO_VGA;
+    int escala = 1;
+
+    leerArgumentos(argc, argv, &anchoVentana, &altoVentana, &escala);
 
     if (gbt_iniciar() != 0) {
         fprintf(stderr, "Error al iniciar GBT: %s\n", gbt_obtener_log());
@@ -36,9 +45,10 @@ int main()
     }
 
     char nombreVentana[128];
-    sprintf(nombreVentana, "Ventana %dx%d", ANCHO_VENTANA, ALTO_VENTANA);
+    sprintf(nombreVentana, "Ventana %dx%d | Escala: x%d", anchoVentana, altoVentana, escala);
+    printf("Ventana %dx%d | Escala: x%d \n", anchoVentana, altoVentana, escala);
 
-    if (gbt_crear_ventana(nombreVentana, ANCHO_VENTANA, ALTO_VENTANA, ESCALA_VENTANA) != 0) {
+    if (gbt_crear_ventana(nombreVentana, anchoVentana, altoVentana, escala) != 0) {
         fprintf(stderr, "Error al iniciar el modulo de graficos de GBT: %s\n", gbt_obtener_log());
         return -1;
     }
