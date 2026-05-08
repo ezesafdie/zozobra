@@ -1,8 +1,15 @@
 # depslib dependency file v1.0
-1778213168 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\main.c
+1778214930 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\main.c
 	<stdio.h>
 	<stdlib.h>
 	"GBT/gbt.h"
+	"utils.h"
+	"estados.h"
+	"menu_principal.h"
+	"juego.h"
+	"pausa.h"
+	"fin_juego.h"
+	"ingreso_nombre.h"
 
 1777827059 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\release\gbt_v2026.1c.01\include\gbt\gbt.h
 	"gbt_entrada.h"
@@ -26,8 +33,53 @@
 	<stdlib.h>
 	<stdint.h>
 
-1777838455 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\utils.c
+1778213850 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\utils.c
 	"utils.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
 
 1777838549 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\utils.h
+
+1778214175 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\estados.c
+	<stdio.h>
+	"estados.h"
+
+1778214638 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\estados.h
+	"GBT/gbt.h"
+
+1778214638 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\fin_juego.c
+	<stdio.h>
+	"fin_juego.h"
+
+1778214638 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\fin_juego.h
+	"estados.h"
+
+1778214638 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\ingreso_nombre.c
+	<stdio.h>
+	"ingreso_nombre.h"
+
+1778214638 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\ingreso_nombre.h
+	"estados.h"
+
+1778214638 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\juego.c
+	<stdio.h>
+	"juego.h"
+
+1778214638 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\juego.h
+	"estados.h"
+
+1778214638 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\menu_principal.h
+	"estados.h"
+
+1778214638 d:\documents\topicos\26\tp\zozobra\tetris_zozobra\pausa.h
+	"estados.h"
+
+1778214638 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\menu_principal.c
+	<stdio.h>
+	"menu_principal.h"
+
+1778214638 source:d:\documents\topicos\26\tp\zozobra\tetris_zozobra\pausa.c
+	<stdio.h>
+	"pausa.h"
 
