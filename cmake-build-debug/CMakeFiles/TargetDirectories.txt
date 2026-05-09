@@ -1,3 +1,0 @@
-C:/Users/Eze/Develop/Universidad/zozobra/cmake-build-debug/CMakeFiles/zozobra.dir
-C:/Users/Eze/Develop/Universidad/zozobra/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Eze/Develop/Universidad/zozobra/cmake-build-debug/CMakeFiles/rebuild_cache.dir
