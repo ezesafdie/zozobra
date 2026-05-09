@@ -144,6 +144,7 @@ int main(int argc, char* argv[])
 
         case ESTADO_SALIR:
             corriendo = 0;
+            printf("Saliendo del ejemplo\n");
             break;
         }
 
