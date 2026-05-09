@@ -8,7 +8,7 @@ typedef struct {
 } Tablero;
 
 
-Tablero* crearTablero(Tablero* t, int ancho, int alto);
+int crearTablero(Tablero* t, int ancho, int alto);
 void destruirTablero(Tablero* t);
 void vaciarTablero(Tablero* t);
 int detectarFilasCompletas(Tablero* t, int filaInicio, int filaFin, int filasLlenas[4]);

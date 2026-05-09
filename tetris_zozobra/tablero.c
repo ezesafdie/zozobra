@@ -1,7 +1,7 @@
-# include "tablero.h"
+#include "tablero.h"
 
 #include <stdlib.h>
-#include "tablero.h"
+#include <stdbool.h>
 
 int crearTablero(Tablero* t, int ancho, int alto)
 {
