@@ -4,7 +4,7 @@
 #include "estados.h"
 
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa);
-void dibujarJuegoClasico(void);
-void dibujarJuegoDX(void);
+void dibujarJuegoClasico(int anchoVentana, int altoVentana);
+void dibujarJuegoDX(int anchoVentana, int altoVentana);
 
 #endif // JUEGO_H_INCLUDED

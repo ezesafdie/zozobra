@@ -154,10 +154,10 @@ int main(int argc, char* argv[])
             dibujarMenuPrincipal();
             break;
         case ESTADO_JUEGO_CLASICO:
-            dibujarJuegoClasico();
+            dibujarJuegoClasico(anchoVentana, altoVentana);
             break;
         case ESTADO_JUEGO_DX:
-            dibujarJuegoDX();
+            dibujarJuegoDX(anchoVentana, altoVentana);
             break;
         case ESTADO_PAUSA:
             dibujarPausa();
