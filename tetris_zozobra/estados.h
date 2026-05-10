@@ -1,0 +1,16 @@
+#ifndef ESTADOS_H_INCLUDED
+#define ESTADOS_H_INCLUDED
+
+#include "GBT/gbt.h"
+
+typedef enum {
+    ESTADO_MENU_PRINCIPAL,
+    ESTADO_JUEGO_CLASICO,
+    ESTADO_JUEGO_DX,
+    ESTADO_INGRESO_NOMBRE,
+    ESTADO_PAUSA,
+    ESTADO_FIN_JUEGO,
+    ESTADO_SALIR
+} EstadoJuego;
+
+#endif // ESTADOS_H_INCLUDED

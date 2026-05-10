@@ -1,0 +1,35 @@
+*.exe
+**/obj/
+**/bin/
+*.depend
+*.layout
+
+# Ignore CLion project files
+/.idea/
+*.iml
+
+# Ignore CMake build directories and generated files
+/cmake-build-*/
+/cmake-build-debug/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/build.ninja
+
+# Ignore build outputs (already covered but keep explicit)
+/bin/
+/obj/
+*.o
+*.obj
+*.dll
+
+# Ignore temporary and testing folders
+/Testing/
+/Testing/Temporary/
+
+# Keep local editor or OS files out
+*.swp
+.DS_Store
+Thumbs.db
+
+# End of .gitignore
