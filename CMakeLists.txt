@@ -17,6 +17,7 @@ add_executable(zozobra
         tetris_zozobra/release/GBT_v2026.1C.01/include/GBT/gbt_temporizador.h
         tetris_zozobra/release/GBT_v2026.1C.01/include/GBT/gbt_vector.h
         tetris_zozobra/estados.h
+         tetris_zozobra/codigos_retorno.h
         tetris_zozobra/fin_juego.c
         tetris_zozobra/fin_juego.h
         tetris_zozobra/ingreso_nombre.c

@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include "juego.h"
 #include "tablero.h"
-#include "juego.h"
+#include "codigos_retorno.h"
 #include "render.h"
 
-#define CLASSIC_WIDTH 10
-#define CLASSIC_HEIGHT 24
+#define ANCHO_MODO_CLASICO 10
+#define ALTO_MODO_CLASICO 24
 
 // Variables estaticas privadas de este modulo
 static Tablero miTablero;
@@ -16,9 +16,17 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
     // Inicializacion del tablero (se ejecuta solo la primera vez)
     if (!tableroInicializado)
     {
-        if (crearTablero(&miTablero, CLASSIC_WIDTH, CLASSIC_HEIGHT) == 1)
+        CodigoRetorno resultadoCreacion = crearTablero(&miTablero, ANCHO_MODO_CLASICO, ALTO_MODO_CLASICO);
+        if (resultadoCreacion != TODO_OK)
         {
-            printf("Error critico: No se pudo reservar memoria para el tablero.\n");
+            if (resultadoCreacion == ERROR_SIN_MEMORIA)
+            {
+                printf("Error critico: No se pudo reservar memoria para el tablero.\n");
+            }
+            else
+            {
+                printf("Error critico: Fallo al crear el tablero (codigo %d).\n", resultadoCreacion);
+            }
             //TODO: Habria que retornar una estructura que tenga el estado del juego junto con un codigo de error.
         }
         else

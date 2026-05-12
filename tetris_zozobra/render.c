@@ -1,6 +1,11 @@
 #include "render.h"
 #include "GBT/gbt_graficos.h"
 
+//Colores VGA estandar
+#define COLOR_NEGRO       0
+#define COLOR_GRIS_OSCURO 8
+#define COLOR_BLANCO      15
+
 static void dibujarBloque(int coordX, int coordY, int tam, uint8_t colorRelleno, uint8_t colorBorde)
 {
     for (int i = 0; i < tam; i++)
@@ -42,11 +47,11 @@ void dibujarGrillaTablero(Tablero* t, int anchoVentana, int altoVentana)
 
             if (t->matriz[i][j] == 0)
             {
-                dibujarBloque(coordX, coordY, tamBloque, 0, 8);
+                dibujarBloque(coordX, coordY, tamBloque, COLOR_NEGRO, COLOR_GRIS_OSCURO);
             }
             else
             {
-                dibujarBloque(coordX, coordY, tamBloque, t->matriz[i][j], 15);
+                dibujarBloque(coordX, coordY, tamBloque, t->matriz[i][j], COLOR_BLANCO);
             }
         }
     }

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-int crearTablero(Tablero* t, int ancho, int alto)
+CodigoRetorno crearTablero(Tablero* t, int ancho, int alto)
 {
     t->ancho = ancho;
     t->alto = alto;
@@ -12,7 +12,7 @@ int crearTablero(Tablero* t, int ancho, int alto)
     t->matriz = (int**)malloc(alto * sizeof(int*));
     if (t->matriz == NULL)
     {
-        return 1;
+        return ERROR_SIN_MEMORIA;
     }
 
     //Reservamos memoria para cada fila e inicializamos en 0
@@ -38,11 +38,11 @@ int crearTablero(Tablero* t, int ancho, int alto)
             free(t->matriz);
             t->matriz = NULL;
 
-            return 1;
+            return ERROR_SIN_MEMORIA;
         }
     }
 
-    return 0;
+    return TODO_OK;
 }
 
 int detectarFilasCompletas(Tablero* t, int filaInicio, int filaFin, int filasLlenas[4])
@@ -84,7 +84,7 @@ void ejecutarBorradoFilas(Tablero* t, int filasLlenas[4], int cantidad)
         //Guardamos el puntero de la fila a borrar
         int* filaReciclada = t->matriz[filaObjetivo];
 
-        //Bajamos los punteros de las filas que están por encima de la fila objetivo
+        //Bajamos los punteros de las filas que estï¿½n por encima de la fila objetivo
         for (int k = filaObjetivo; k > 0; k--)
         {
             t->matriz[k] = t->matriz[k - 1];

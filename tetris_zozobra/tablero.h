@@ -1,6 +1,8 @@
 #ifndef TABLERO_H_INCLUDED
 #define TABLERO_H_INCLUDED
 
+#include "codigos_retorno.h"
+
 typedef struct {
     int ancho;
     int alto;
@@ -8,7 +10,7 @@ typedef struct {
 } Tablero;
 
 
-int crearTablero(Tablero* t, int ancho, int alto);
+CodigoRetorno crearTablero(Tablero* t, int ancho, int alto);
 void destruirTablero(Tablero* t);
 void vaciarTablero(Tablero* t);
 int detectarFilasCompletas(Tablero* t, int filaInicio, int filaFin, int filasLlenas[4]);
