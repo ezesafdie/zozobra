@@ -33,4 +33,5 @@ add_executable(zozobra
         tetris_zozobra/tablero.h
         tetris_zozobra/utils.c
         tetris_zozobra/utils.h
-        tetris_zozobra/render.c)
+        tetris_zozobra/render.c
+        tetris_zozobra/tetromino.c)
