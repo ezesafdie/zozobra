@@ -37,7 +37,8 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
             printf("Tablero inicializado correctamente en memoria.\n");
 
             //TODO: Mas alla de borrar el y=8. Al momento de que se tenga que generar una nueva pieza, cuando la priemera ya llego al final, hay que hacer la logica de spawn con temporizadores
-            generarPieza(&piezaActual, 4, tablero.ancho);
+            int tipoAleatorio = (rand() % 7) + 1;
+            generarPieza(&piezaActual, tipoAleatorio, tablero.ancho);
             piezaActual.y = 8;
         }
     }
