@@ -1,83 +1,54 @@
 #include "tetromino.h"
 
+// Definimos un array constante con todas las piezas posibles, con la estructura ya creada:
+// { x, y, tam, color, { matriz } }
+static const Pieza CATALOGO_PIEZAS[7] = {
+    // 1: Cuadrado 'O' (amarillo)
+    {0, 0, 2, 14, {
+        {1, 1},
+        {1, 1}
+    }},
+
+    // 2: Palo 'I' (cian)
+    {0, 0, 4, 3, {
+        {0, 0, 0, 0},
+        {1, 1, 1, 1}
+    }},
+
+     // 3: Letra 'T' (purpura)
+     {0, 0, 3, 5, {
+         {0, 1, 0},
+         {1, 1, 1}
+    }},
+
+    // 4: Letra 'L' (naranja)
+    {0, 0, 3, 6, {
+        {0, 0, 1},
+        {1, 1, 1}
+    }},
+
+    // 5: Letra 'J' (azul)
+    {0, 0, 3, 1, {
+        {1, 0, 0},
+        {1, 1, 1}
+    }},
+
+    // 6: Letra 'S' (verde)
+    {0, 0, 3, 2, {
+        {0, 1, 1},
+        {1, 1, 0}
+    }},
+
+    // 7: Letra 'Z' (rojo)
+    {0, 0, 3, 4, {
+        {1, 1, 0},
+        {0, 1, 1}
+    }}
+};
+
 void generarPieza(Pieza* pieza, int tipoPieza, int anchoTablero)
 {
-
-    //Limpiamos (seteamos a 0) toda la pieza por seguridad
-    for(int i = 0; i < VALOR_MAXIMO_PIEZA; i++)
-    {
-        for(int j = 0; j < VALOR_MAXIMO_PIEZA; j++)
-        {
-            pieza->matrizDeForma[i][j] = 0;
-        }
-    }
-
-    switch(tipoPieza)
-    {
-    case 1: // Pieza 'O' (Cuadrado - Amarillo)
-        pieza->tam = 2;
-        pieza->color = 14;
-        pieza->matrizDeForma[0][0] = 1;
-        pieza->matrizDeForma[0][1] = 1;
-        pieza->matrizDeForma[1][0] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        break;
-
-    case 2: // Pieza 'I' (Palo - Cian)
-        pieza->tam = 4;
-        pieza->color = 3;
-        // En el estandar, el palo nace acostado en la segunda fila
-        pieza->matrizDeForma[1][0] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        pieza->matrizDeForma[1][2] = 1;
-        pieza->matrizDeForma[1][3] = 1;
-        break;
-
-    case 3: // Pieza 'T' (Fucsia)
-        pieza->tam = 3;
-        pieza->color = 5;
-        pieza->matrizDeForma[0][1] = 1;
-        pieza->matrizDeForma[1][0] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        pieza->matrizDeForma[1][2] = 1;
-        break;
-
-    case 4: // Pieza 'L' (Naranja / Marron claro)
-        pieza->tam = 3;
-        pieza->color = 6;
-        pieza->matrizDeForma[0][2] = 1;
-        pieza->matrizDeForma[1][0] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        pieza->matrizDeForma[1][2] = 1;
-        break;
-
-    case 5: // Pieza 'J' (Azul)
-        pieza->tam = 3;
-        pieza->color = 1;
-        pieza->matrizDeForma[0][0] = 1;
-        pieza->matrizDeForma[1][0] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        pieza->matrizDeForma[1][2] = 1;
-        break;
-
-    case 6: // Pieza 'S' (Verde)
-        pieza->tam = 3;
-        pieza->color = 2;
-        pieza->matrizDeForma[0][1] = 1;
-        pieza->matrizDeForma[0][2] = 1;
-        pieza->matrizDeForma[1][0] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        break;
-
-    case 7: // Pieza 'Z' (Rojo)
-        pieza->tam = 3;
-        pieza->color = 4;
-        pieza->matrizDeForma[0][0] = 1;
-        pieza->matrizDeForma[0][1] = 1;
-        pieza->matrizDeForma[1][1] = 1;
-        pieza->matrizDeForma[1][2] = 1;
-        break;
-    }
+    *pieza = CATALOGO_PIEZAS[tipoPieza - 1];
 
     pieza->x = (anchoTablero - pieza->tam) / 2;
     pieza->y = 0;

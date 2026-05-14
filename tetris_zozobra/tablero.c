@@ -84,8 +84,8 @@ void ejecutarBorradoFilas(Tablero* t, int filasLlenas[4], int cantidad)
         //Guardamos el puntero de la fila a borrar
         int* filaReciclada = t->matriz[filaObjetivo];
 
-        //Bajamos los punteros de las filas que est�n por encima de la fila objetivo
-        for (int k = filaObjetivo; k > 0; k--)
+         //Bajamos los punteros de las filas que estan por encima de la fila objetivo
+         for (int k = filaObjetivo; k > 0; k--)
         {
             t->matriz[k] = t->matriz[k - 1];
         }
