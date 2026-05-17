@@ -25,9 +25,11 @@
 #include "menu_principal.h"
 #include "juego.h"
 #include "pausa.h"
+#include "fuentes.h"
 #include "fin_juego.h"
 #include "ingreso_nombre.h"
 #include "codigos_retorno.h"
+#include "fuentes.h"
 #define ANCHO_VGA 640
 #define ALTO_VGA 480
 #define ANCHO_CGA 320
@@ -39,7 +41,7 @@ int main(int argc, char* argv[])
 
     int anchoVentana = ANCHO_VGA;
     int altoVentana = ALTO_VGA;
-    int escala = 1;
+    int escala = 2;
 
     leerArgumentos(argc, argv, &anchoVentana, &altoVentana, &escala);
 
@@ -177,6 +179,14 @@ int main(int argc, char* argv[])
         gbt_volcar_backbuffer();
         gbt_esperar(16);
     }
+
+    ///Espera para ver texto en pantalla
+    /*
+    while(1)
+    {
+        printf(" ");
+    }
+   */
 
     gbt_destruir_ventana();
     gbt_cerrar();

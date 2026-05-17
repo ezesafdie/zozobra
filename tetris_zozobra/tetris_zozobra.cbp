@@ -41,6 +41,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="fin_juego.h" />
+		<Unit filename="fuentes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="fuentes.h" />
 		<Unit filename="ingreso_nombre.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -49,6 +53,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="juego.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="menu_principal.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -57,9 +64,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="pausa.h" />
-		<Unit filename="main.c">
+		<Unit filename="render.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="render.h" />
+		<Unit filename="tablero.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tablero.h" />
 		<Unit filename="utils.c">
 			<Option compilerVar="CC" />
 		</Unit>
