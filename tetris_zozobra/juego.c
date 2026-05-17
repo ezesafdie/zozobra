@@ -46,6 +46,7 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
     }
 
     // 2. Procesamiento de las teclas
+    /*
     switch (tecla)
     {
     case GBTK_IZQUIERDA:
@@ -95,6 +96,31 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
         return ESTADO_FIN_JUEGO;
     default:
         break;
+    }
+    */
+
+    if (gbt_tecla_sostenida(GBTK_IZQUIERDA))
+    {
+        if(esMovimientoValido(&piezaActual, &tablero, -1, 0))
+        {
+            piezaActual.x--;
+        }
+    }
+
+    if (gbt_tecla_sostenida(GBTK_DERECHA))
+    {
+        if(esMovimientoValido(&piezaActual, &tablero, 1, 0))
+        {
+            piezaActual.x++;
+        }
+    }
+
+    if (gbt_tecla_sostenida(GBTK_ABAJO))
+    {
+        if(esMovimientoValido(&piezaActual, &tablero, 0, 1))
+        {
+            piezaActual.y++;
+        }
     }
     return estadoActual;
 }
