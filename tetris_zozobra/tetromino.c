@@ -15,7 +15,7 @@ static const Pieza CATALOGO_PIEZAS[7] = {
         {1, 1, 1, 1}
     }},
 
-     // 3: Letra 'T' (purpura)
+     // 3: Letra 'T' (violeta)
      {0, 0, 3, 5, {
          {0, 1, 0},
          {1, 1, 1}
@@ -53,4 +53,27 @@ void generarPieza(Pieza* pieza, int tipoPieza, int anchoTablero)
     pieza->x = (anchoTablero - pieza->tam) / 2;
     pieza->y = 0;
 
+}
+
+void rotarPieza(Pieza* pieza)
+{
+    Pieza copia = *pieza;
+
+    //Limpiemos la matriz a 0
+    for(int i = 0; i < VALOR_MAXIMO_PIEZA; i++)
+    {
+        for(int j = 0; j <VALOR_MAXIMO_PIEZA; j++)
+        {
+            pieza->matrizDeForma[i][j] = 0;
+        }
+    }
+
+    //Rotacion propiamente dicha
+    for(int i = 0; i < pieza->tam; i++)
+    {
+        for(int j = 0; j < pieza->tam; j++)
+        {
+            pieza->matrizDeForma[j][pieza->tam - 1 - i] = copia.matrizDeForma[i][j];
+        }
+    }
 }

@@ -13,6 +13,8 @@ static Tablero tablero;
 static Pieza piezaActual;
 static int tableroInicializado = 0;
 
+static int esMovimientoValido(Pieza* pieza, Tablero* tablero, int offsetX, int offsetY);
+
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa)
 {
     // Inicializacion del tablero (se ejecuta solo la primera vez)
@@ -46,6 +48,36 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
     // 2. Procesamiento de las teclas
     switch (tecla)
     {
+    case GBTK_IZQUIERDA:
+        if(esMovimientoValido(&piezaActual, &tablero, -1, 0))
+        {
+            piezaActual.x--;
+        }
+        break;
+    case GBTK_DERECHA:
+        if(esMovimientoValido(&piezaActual, &tablero, 1, 0))
+        {
+            piezaActual.x++;
+        }
+        break;
+    case GBTK_ABAJO:
+        if(esMovimientoValido(&piezaActual, &tablero, 0, 1))
+        {
+            piezaActual.y++;
+        }
+        break;
+    case GBTK_ARRIBA:
+        //Como la rotacion destruye la matriz de la pieza, hacemos la prueba de validez sobre una copia
+    {
+        Pieza piezaCopia = piezaActual;
+        rotarPieza(&piezaCopia);
+
+        if(esMovimientoValido(&piezaCopia, &tablero, 0, 0))
+        {
+            piezaActual = piezaCopia;
+        }
+    }
+    break;
     case GBTK_p:
         *estadoPrevioPausa = estadoActual;
         printf("Cambiando a estado: PAUSA\n");
@@ -81,4 +113,46 @@ void dibujarJuegoClasico(int anchoVentana, int altoVentana)
 void dibujarJuegoDX(int anchoVentana, int altoVentana)
 {
     gbt_borrar_backbuffer(3); // Cian
+}
+
+/**
+* El objetivo de esta funcion es validar si el siguiente movimiento de la pieza va a ser valido.
+* Recibe la pieza, el tablero, y un offset para x e y.
+* El offset representa la cantidad de distancia que recorre la pieza: \n
+* - Si el jugador aprieta la flecha izquierda: Le pasamos offsetX = -1 y offsetY = 0.\n
+* - Si aprieta la flecha derecha: Le pasamos offsetX = 1 y offsetY = 0. \n
+* - Si aprieta la flecha abajo: Le pasamos offsetX = 0 y offsetY = 1. \n
+* - Si rota la pieza: Le pasamos offsetX = 0 y offsetY = 0.
+* Validaciones que se hacen: \n
+* - 1: Si choca contra las paredes laterales, o el piso \n
+* - 2: Si choca contra un bloque que ya esta puesto en el tablero.
+**/
+static int esMovimientoValido(Pieza* pieza, Tablero* tablero, int offsetX, int offsetY)
+{
+    for(int i = 0; i < pieza->tam; i++)
+    {
+        for(int j = 0; j < pieza->tam; j++)
+        {
+            if(pieza->matrizDeForma[i][j] != 0)
+            {
+                int nuevaFila = pieza->y + i + offsetY;
+                int nuevaColumna = pieza->x + j + offsetX;
+
+                if(nuevaColumna < 0 || nuevaColumna >= tablero->ancho || nuevaFila >= tablero->alto)
+                {
+                    return 0;
+                }
+
+                if(nuevaFila >= 0 && nuevaFila < tablero ->alto)
+                {
+                    if(tablero->matriz[nuevaFila][nuevaColumna] != 0)
+                    {
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    return 1;
 }

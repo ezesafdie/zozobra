@@ -13,5 +13,6 @@ typedef struct
 } Pieza;
 
 void generarPieza(Pieza* pieza, int tipoPieza, int anchoTablero);
+void rotarPieza(Pieza* pieza);
 
 #endif // TETROMINO_H_INCLUDED
