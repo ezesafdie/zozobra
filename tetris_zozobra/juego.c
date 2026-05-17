@@ -15,16 +15,22 @@ static Tablero tablero;
 static Pieza piezaActual;
 static int tableroInicializado = 0;
 static tGBT_Temporizador* temporizadorGravedad = NULL;
+static int piezasTotalesCaidas = 0;
+static int nivelActual = 1;
+static double velocidadActual = VELOCIDAD_INICIAL;
 
 //Funciones privadas de este modulo
 static int esMovimientoValido(Pieza* pieza, Tablero* tablero, int offsetX, int offsetY);
 static int fijarPiezaYGenerarNueva();
+static void calcularNivel();
+static void reiniciarEstadisticas();
 
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa)
 {
     // Inicializacion del tablero (se ejecuta solo la primera vez)
     if (!tableroInicializado)
     {
+        reiniciarEstadisticas();
         CodigoRetorno resultadoCreacion = crearTablero(&tablero, ANCHO_MODO_CLASICO, ALTO_MODO_CLASICO);
         if (resultadoCreacion != TODO_OK)
         {
@@ -44,9 +50,9 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
             printf("Tablero inicializado correctamente en memoria.\n");
             srand(time(NULL));
 
-            //TODO: Esto hay que definirlo, lo dejo creado en 0.2 segundos para que sea facil de probar.
+            //TODO: Esto hay que definirlo, lo dejo creado en 0.3 segundos para que sea facil de probar.
             //Me parece que es muy rapido. Cuando tengamos lo de mantener apretado lo podemos subir.
-            temporizadorGravedad = gbt_temporizador_crear(0.2);
+            temporizadorGravedad = gbt_temporizador_crear(VELOCIDAD_INICIAL);
 
             //TODO: Cambiar esta generacion por el random sin sesgos.
             int tipoAleatorio = (rand() % 7) + 1;
@@ -209,7 +215,7 @@ static int fijarPiezaYGenerarNueva()
                 int filaTablero = piezaActual.y + i;
                 int columnaTablero = piezaActual.x + j;
 
-                if(filaTablero >= 0 && filaTablero)
+                if(filaTablero >= 0 && filaTablero < tablero.alto)
                 {
                     tablero.matriz[filaTablero][columnaTablero] = piezaActual.color;
                 }
@@ -232,7 +238,10 @@ static int fijarPiezaYGenerarNueva()
         ejecutarBorradoFilas(&tablero, filasLlenas, cantidadABorrar);
     }
 
-    //3. Generamos la siguiente pieza y validamos que no sea game over
+    //3. Calculamos el nivel y aumentamos la velocidad si corresponde
+    calcularNivel();
+
+    //4. Generamos la siguiente pieza y validamos que no sea game over
     //TODO: Esto tiene que tener el generador que haga Emi.
     int tipoPiezaAleatoria = (rand() % 7) + 1;
     generarPieza(&piezaActual, tipoPiezaAleatoria, tablero.ancho);
@@ -243,4 +252,30 @@ static int fijarPiezaYGenerarNueva()
     }
 
     return 1;
+}
+
+static void calcularNivel()
+{
+    piezasTotalesCaidas++;
+    int nuevoNivel = (piezasTotalesCaidas / PIEZAS_POR_NIVEL) + 1;
+
+    if(nuevoNivel > nivelActual)
+    {
+        nivelActual = nuevoNivel;
+        velocidadActual = velocidadActual * FACTOR_INCREMENTO_VELOCIDAD;
+
+        //TODO: Poner alguna validacion para que no sea imposible jugar? capaz dejar el minimo en 0.05 o algo asi
+
+        gbt_temporizador_destruir(temporizadorGravedad);
+        temporizadorGravedad = gbt_temporizador_crear(velocidadActual);
+
+        printf("NIVEL %d! Piezas: %d | Velocidad: %.2fs\n", nivelActual, piezasTotalesCaidas, velocidadActual);
+    }
+}
+
+static void reiniciarEstadisticas()
+{
+    nivelActual = 1;
+    velocidadActual = VELOCIDAD_INICIAL;
+    piezasTotalesCaidas = 0;
 }
