@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include "juego.h"
 #include "tablero.h"
-#include "juego.h"
+#include "codigos_retorno.h"
 #include "render.h"
+#include "tetromino.h"
 
-#define CLASSIC_WIDTH 10
-#define CLASSIC_HEIGHT 24
+#define ANCHO_MODO_CLASICO 10
+#define ALTO_MODO_CLASICO 24
 
 // Variables estaticas privadas de este modulo
-static Tablero miTablero;
+static Tablero tablero;
+static Pieza piezaActual;
 static int tableroInicializado = 0;
 
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa)
@@ -16,15 +18,28 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
     // Inicializacion del tablero (se ejecuta solo la primera vez)
     if (!tableroInicializado)
     {
-        if (crearTablero(&miTablero, CLASSIC_WIDTH, CLASSIC_HEIGHT) == 1)
+        CodigoRetorno resultadoCreacion = crearTablero(&tablero, ANCHO_MODO_CLASICO, ALTO_MODO_CLASICO);
+        if (resultadoCreacion != TODO_OK)
         {
-            printf("Error critico: No se pudo reservar memoria para el tablero.\n");
+            if (resultadoCreacion == ERROR_SIN_MEMORIA)
+            {
+                printf("Error critico: No se pudo reservar memoria para el tablero.\n");
+            }
+            else
+            {
+                printf("Error critico: Fallo al crear el tablero (codigo %d).\n", resultadoCreacion);
+            }
             //TODO: Habria que retornar una estructura que tenga el estado del juego junto con un codigo de error.
         }
         else
         {
             tableroInicializado = 1;
             printf("Tablero inicializado correctamente en memoria.\n");
+
+            //TODO: Mas alla de borrar el y=8. Al momento de que se tenga que generar una nueva pieza, cuando la primera ya llego al final, hay que hacer la logica de spawn con temporizadores
+            int tipoAleatorio = (rand() % 7) + 1;
+            generarPieza(&piezaActual, tipoAleatorio, tablero.ancho);
+            piezaActual.y = 8;
         }
     }
 
@@ -40,7 +55,7 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
 
         if (tableroInicializado)
         {
-            destruirTablero(&miTablero);
+            destruirTablero(&tablero);
             tableroInicializado = 0;
             printf("Memoria del tablero liberada.\n");
         }
@@ -58,7 +73,8 @@ void dibujarJuegoClasico(int anchoVentana, int altoVentana)
 
     if (tableroInicializado)
     {
-        dibujarGrillaTablero(&miTablero, anchoVentana, altoVentana);
+        dibujarGrillaTablero(&tablero, anchoVentana, altoVentana);
+        dibujarPiezaActiva(&piezaActual, &tablero, anchoVentana, altoVentana);
     }
 }
 
