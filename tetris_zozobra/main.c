@@ -28,6 +28,7 @@
 #include "fuentes.h"
 #include "fin_juego.h"
 #include "ingreso_nombre.h"
+#include "codigos_retorno.h"
 #include "fuentes.h"
 #define ANCHO_VGA 640
 #define ALTO_VGA 480
@@ -47,7 +48,7 @@ int main(int argc, char* argv[])
     if (gbt_iniciar() != 0)
     {
         fprintf(stderr, "Error al iniciar GBT: %s\n", gbt_obtener_log());
-        return -1;
+        return ERROR_INICIALIZACION_GBT;
     }
 
     char nombreVentana[128];
@@ -57,7 +58,7 @@ int main(int argc, char* argv[])
     if (gbt_crear_ventana(nombreVentana, anchoVentana, altoVentana, escala) != 0)
     {
         fprintf(stderr, "Error al iniciar el modulo de graficos de GBT: %s\n", gbt_obtener_log());
-        return -1;
+        return ERROR_GRAFICOS_GBT;
     }
 
     EstadoJuego estadoActual = ESTADO_MENU_PRINCIPAL;
@@ -185,7 +186,7 @@ int main(int argc, char* argv[])
     {
         printf(" ");
     }
-*/
+   */
 
     gbt_destruir_ventana();
     gbt_cerrar();

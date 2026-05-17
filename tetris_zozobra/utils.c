@@ -46,17 +46,17 @@ void leerArgumentos(int argc, char* argv[], int* anchoVentana, int* altoVentana,
             }
         }
 
-        if(strcmp(argv[i], "--ayuda") == 0)
-        {
-            puts("----Tetris Zozobra---- \n"
-                 "Configuraciones base para la inicialización del juego. "
-                 "Las posibles configuraciones son: \n"
-                 "--resolucion : Acepta únicamente los valores 'vga' para una resolucion de 640x480 o 'cga' para una resolución de 320x200 \n"
-                 "--escala : Factor de escala de ventana. Acepta valores del 1 al 10 \n"
-                );
-            contArgs++;
-            continue;
-        }
+         if(strcmp(argv[i], "--ayuda") == 0)
+         {
+             puts("----Tetris Zozobra---- \n"
+                  "Configuraciones base para la inicializacion del juego. "
+                  "Las posibles configuraciones son: \n"
+                  "--resolucion : Acepta unicamente los valores 'vga' para una resolucion de 640x480 o 'cga' para una resolucion de 320x200 \n"
+                  "--escala : Factor de escala de ventana. Acepta valores del 1 al 10 \n"
+                 );
+             contArgs++;
+             continue;
+         }
 
         switch(codError)
         {
