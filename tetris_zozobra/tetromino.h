@@ -9,6 +9,7 @@ typedef struct
     int y;
     int tam; // 2, 3, 4, 5. Usado para saber hasta que parte de la matriz usar
     int color;
+    int spawnY; // Usado para saber en que fila de las invisibles deberia aparecer
     int matrizDeForma[VALOR_MAXIMO_PIEZA][VALOR_MAXIMO_PIEZA]; //Matriz del valor maximo que puede tener
 } Pieza;
 
