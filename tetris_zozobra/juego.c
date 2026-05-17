@@ -14,16 +14,23 @@
 static Tablero tablero;
 static Pieza piezaActual;
 static int tableroInicializado = 0;
+
 static tGBT_Temporizador* temporizadorGravedad = NULL;
 static int piezasTotalesCaidas = 0;
 static int nivelActual = 1;
 static double velocidadActual = VELOCIDAD_INICIAL;
 
+static tGBT_Temporizador* temporizadorFijacion = NULL;
+static int enFaseDeFijacion = 0;
+static int reseteosDeFijacion = 0;
+
 //Funciones privadas de este modulo
 static int esMovimientoValido(Pieza* pieza, Tablero* tablero, int offsetX, int offsetY);
 static int fijarPiezaYGenerarNueva();
+static void validarFilasCompletas();
 static void calcularNivel();
 static void reiniciarEstadisticas();
+static void gestionarFaseDeFijacion(int movimientoExitoso);
 
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa)
 {
@@ -60,17 +67,12 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
         }
     }
 
-    //Fisica de gravedad
-    if(tableroInicializado && gbt_temporizador_consumir(temporizadorGravedad))
+    int movimientoExitoso = 0;
+    if(enFaseDeFijacion)
     {
-        if(esMovimientoValido(&piezaActual, &tablero, 0, 1))
-        {
-            piezaActual.y++;
-        }
-        else
+        if(gbt_temporizador_consumir(temporizadorFijacion))
         {
             if(!fijarPiezaYGenerarNueva())
-
             {
                 printf("GAME OVER");
                 destruirTablero(&tablero);
@@ -78,6 +80,13 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
                 tableroInicializado = 0;
                 return ESTADO_FIN_JUEGO;
             }
+        }
+    }
+    else if(tableroInicializado && gbt_temporizador_consumir(temporizadorGravedad))
+    {
+        if(esMovimientoValido(&piezaActual, &tablero, 0, 1))
+        {
+            piezaActual.y++;
         }
     }
 
@@ -88,27 +97,20 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
         if(esMovimientoValido(&piezaActual, &tablero, -1, 0))
         {
             piezaActual.x--;
+            movimientoExitoso = 1;
         }
         break;
     case GBTK_DERECHA:
         if(esMovimientoValido(&piezaActual, &tablero, 1, 0))
         {
             piezaActual.x++;
+            movimientoExitoso = 1;
         }
         break;
     case GBTK_ABAJO:
         if(esMovimientoValido(&piezaActual, &tablero, 0, 1))
         {
             piezaActual.y++;
-        }
-        else if(!fijarPiezaYGenerarNueva())
-
-        {
-            printf("GAME OVER");
-            destruirTablero(&tablero);
-            gbt_temporizador_destruir(temporizadorGravedad);
-            tableroInicializado = 0;
-            return ESTADO_FIN_JUEGO;
         }
         break;
     case GBTK_ARRIBA:
@@ -120,6 +122,7 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
         if(esMovimientoValido(&piezaCopia, &tablero, 0, 0))
         {
             piezaActual = piezaCopia;
+            movimientoExitoso = 1;
         }
     }
     break;
@@ -141,6 +144,12 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
     default:
         break;
     }
+
+    if(tableroInicializado)
+    {
+        gestionarFaseDeFijacion(movimientoExitoso);
+    }
+
     return estadoActual;
 }
 
@@ -224,19 +233,7 @@ static int fijarPiezaYGenerarNueva()
     }
 
     //2. Validamos si se completo alguna fila.
-    int filaInicio = piezaActual.y;
-    if(filaInicio < 0)
-        filaInicio = 0;
-    int filaFin = piezaActual.y + piezaActual.tam - 1;
-    if(filaFin >= tablero.alto)
-        filaFin = tablero.alto - 1;
-
-    int filasLlenas[4];
-    int cantidadABorrar = detectarFilasCompletas(&tablero, filaInicio, filaFin, filasLlenas);
-    if(cantidadABorrar > 0)
-    {
-        ejecutarBorradoFilas(&tablero, filasLlenas, cantidadABorrar);
-    }
+    validarFilasCompletas();
 
     //3. Calculamos el nivel y aumentamos la velocidad si corresponde
     calcularNivel();
@@ -252,6 +249,23 @@ static int fijarPiezaYGenerarNueva()
     }
 
     return 1;
+}
+
+static void validarFilasCompletas()
+{
+    int filaInicio = piezaActual.y;
+    if(filaInicio < 0)
+        filaInicio = 0;
+    int filaFin = piezaActual.y + piezaActual.tam - 1;
+    if(filaFin >= tablero.alto)
+        filaFin = tablero.alto - 1;
+
+    int filasLlenas[4];
+    int cantidadABorrar = detectarFilasCompletas(&tablero, filaInicio, filaFin, filasLlenas);
+    if(cantidadABorrar > 0)
+    {
+        ejecutarBorradoFilas(&tablero, filasLlenas, cantidadABorrar);
+    }
 }
 
 static void calcularNivel()
@@ -273,9 +287,47 @@ static void calcularNivel()
     }
 }
 
+static void gestionarFaseDeFijacion(int movimientoExitoso)
+{
+    if(!esMovimientoValido(&piezaActual, &tablero, 0, 1))
+    {
+        if(!enFaseDeFijacion)
+        {
+            enFaseDeFijacion = 1;
+            reseteosDeFijacion = 0;
+
+            if(temporizadorFijacion)
+            {
+                gbt_temporizador_destruir(temporizadorFijacion);
+            }
+
+            temporizadorFijacion = gbt_temporizador_crear(velocidadActual * FACTOR_VELOCIDAD_FIJACION);
+        }
+        else if(movimientoExitoso && reseteosDeFijacion < MAX_RESETEOS_DE_FIJACION)
+        {
+            reseteosDeFijacion++;
+
+            gbt_temporizador_destruir(temporizadorFijacion);
+            temporizadorFijacion = gbt_temporizador_crear(velocidadActual * FACTOR_VELOCIDAD_FIJACION);
+        }
+    }
+    else
+    {
+        enFaseDeFijacion = 0;
+    }
+}
+
 static void reiniciarEstadisticas()
 {
     nivelActual = 1;
     velocidadActual = VELOCIDAD_INICIAL;
     piezasTotalesCaidas = 0;
+    enFaseDeFijacion = 0;
+    reseteosDeFijacion = 0;
+
+    if(temporizadorFijacion != NULL)
+    {
+        gbt_temporizador_destruir(temporizadorFijacion);
+        temporizadorFijacion = NULL;
+    }
 }
