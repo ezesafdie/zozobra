@@ -31,6 +31,7 @@ static void validarFilasCompletas();
 static void calcularNivel();
 static void reiniciarEstadisticas();
 static void gestionarFaseDeFijacion(int movimientoExitoso);
+static void dibujarPiezaFantasma(int anchoVentana, int altoVentana);
 
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa)
 {
@@ -160,6 +161,8 @@ void dibujarJuegoClasico(int anchoVentana, int altoVentana)
     if (tableroInicializado)
     {
         dibujarGrillaTablero(&tablero, anchoVentana, altoVentana);
+
+        dibujarPiezaFantasma(anchoVentana, altoVentana);
         dibujarPiezaActiva(&piezaActual, &tablero, anchoVentana, altoVentana);
     }
 }
@@ -315,6 +318,18 @@ static void gestionarFaseDeFijacion(int movimientoExitoso)
     {
         enFaseDeFijacion = 0;
     }
+}
+
+static void dibujarPiezaFantasma(int anchoVentana, int altoVentana)
+{
+    Pieza piezaFantasma = piezaActual;
+    while(esMovimientoValido(&piezaFantasma, &tablero, 0, 1))
+    {
+        piezaFantasma.y++;
+    }
+    piezaFantasma.color = 8;
+
+    dibujarPiezaActiva(&piezaFantasma, &tablero, anchoVentana, altoVentana);
 }
 
 static void reiniciarEstadisticas()
