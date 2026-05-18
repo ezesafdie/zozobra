@@ -327,7 +327,7 @@ static void dibujarPiezaFantasma(int anchoVentana, int altoVentana)
     {
         piezaFantasma.y++;
     }
-    piezaFantasma.color = 8;
+    piezaFantasma.color = COLOR_GRIS;
 
     dibujarPiezaActiva(&piezaFantasma, &tablero, anchoVentana, altoVentana);
 }
