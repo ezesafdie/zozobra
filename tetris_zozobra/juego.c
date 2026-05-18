@@ -13,12 +13,14 @@
 // Variables estaticas privadas de este modulo
 static Tablero tablero;
 static Pieza piezaActual;
+static Pieza piezaSiguiente;
 static int tableroInicializado = 0;
 
 static tGBT_Temporizador* temporizadorGravedad = NULL;
 static int piezasTotalesCaidas = 0;
 static int nivelActual = 1;
 static double velocidadActual = VELOCIDAD_INICIAL;
+static int puntajeTotal = 0;
 
 static tGBT_Temporizador* temporizadorFijacion = NULL;
 static int enFaseDeFijacion = 0;
@@ -29,6 +31,7 @@ static int esMovimientoValido(Pieza* pieza, Tablero* tablero, int offsetX, int o
 static int fijarPiezaYGenerarNueva();
 static void validarFilasCompletas();
 static void calcularNivel();
+static void calcularPuntaje(int lineasBorradas);
 static void reiniciarEstadisticas();
 static void gestionarFaseDeFijacion(int movimientoExitoso);
 static void dibujarPiezaFantasma(int anchoVentana, int altoVentana);
@@ -63,8 +66,11 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
             temporizadorGravedad = gbt_temporizador_crear(VELOCIDAD_INICIAL);
 
             //TODO: Cambiar esta generacion por el random sin sesgos.
-            int tipoAleatorio = (rand() % 7) + 1;
-            generarPieza(&piezaActual, tipoAleatorio, tablero.ancho);
+            int tipoPiezaAleatorio = (rand() % 7) + 1;
+            generarPieza(&piezaActual, tipoPiezaAleatorio, tablero.ancho);
+
+            int tipoPiezaSiguiente = (rand() % 7) + 1;
+            generarPieza(&piezaSiguiente, tipoPiezaSiguiente, tablero.ancho);
         }
     }
 
@@ -112,6 +118,12 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
         if(esMovimientoValido(&piezaActual, &tablero, 0, 1))
         {
             piezaActual.y++;
+            //TODO: El enunciado dice "A mayor velocidad, mayor los puntos obtenidos por el jugador."
+            // Eso ya se contempla cuando borar una linea. Tambien se puede hacer para que el valor de bajarlo a mano
+            //sea algo como puntajeTotal += nivel. Que piensan?
+            puntajeTotal++;
+
+            printf("Soft Drop! +1 pt | SCORE: %d\n", puntajeTotal);
         }
         break;
     case GBTK_ARRIBA:
@@ -241,10 +253,11 @@ static int fijarPiezaYGenerarNueva()
     //3. Calculamos el nivel y aumentamos la velocidad si corresponde
     calcularNivel();
 
-    //4. Generamos la siguiente pieza y validamos que no sea game over
+    //4. Actualizamos la pieza actual con la siguiente, volvemos a generar la siguiente y validamos que no sea game over
+    piezaActual = piezaSiguiente;
     //TODO: Esto tiene que tener el generador que haga Emi.
     int tipoPiezaAleatoria = (rand() % 7) + 1;
-    generarPieza(&piezaActual, tipoPiezaAleatoria, tablero.ancho);
+    generarPieza(&piezaSiguiente, tipoPiezaAleatoria, tablero.ancho);
 
     if(!esMovimientoValido(&piezaActual, &tablero, 0, 0))
     {
@@ -268,6 +281,7 @@ static void validarFilasCompletas()
     if(cantidadABorrar > 0)
     {
         ejecutarBorradoFilas(&tablero, filasLlenas, cantidadABorrar);
+        calcularPuntaje(cantidadABorrar);
     }
 }
 
@@ -332,6 +346,24 @@ static void dibujarPiezaFantasma(int anchoVentana, int altoVentana)
     dibujarPiezaActiva(&piezaFantasma, &tablero, anchoVentana, altoVentana);
 }
 
+static void calcularPuntaje(int lineasBorradas)
+{
+    if(lineasBorradas <= 0)
+        return;
+
+    int puntosBase = 0;
+    switch (lineasBorradas)
+    {
+        case 1: puntosBase = 40; break;
+        case 2: puntosBase = 100; break;
+        case 3: puntosBase = 300; break;
+        case 4: puntosBase = 1200; break;
+    }
+
+    puntajeTotal += puntosBase * nivelActual;
+    printf("%d LINEAS! | +%d pts | SCORE: %d\n", lineasBorradas, puntosBase * nivelActual, puntajeTotal);
+}
+
 static void reiniciarEstadisticas()
 {
     nivelActual = 1;
@@ -339,6 +371,7 @@ static void reiniciarEstadisticas()
     piezasTotalesCaidas = 0;
     enFaseDeFijacion = 0;
     reseteosDeFijacion = 0;
+    puntajeTotal = 0;
 
     if(temporizadorFijacion != NULL)
     {
