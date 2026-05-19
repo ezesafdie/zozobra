@@ -16,6 +16,9 @@ static int cache_tamBloque = 0;
 static int cache_margenX = 0;
 static int cache_margenY = 0;
 
+static void dibujarRecuadro(int x, int y, int ancho, int alto, uint8_t color);
+static void dibujarPiezaSiguiente(Pieza* piezaSiguiente, int panelX, int panelAncho, int cajaSiguienteY, int cajaSiguienteAlto);
+
 static void actualizarCacheSiEsNecesario(Tablero* t, int anchoVentana, int altoVentana)
 {
     if (cache_anchoVentana != anchoVentana || cache_altoVentana != altoVentana)
@@ -99,5 +102,113 @@ void dibujarPiezaActiva(Pieza* pieza, Tablero* tablero, int anchoVentana, int al
                 }
             }
         }
+    }
+}
+
+//TODO: Revisar que los valores no queden hardcodeados, tiene que ser variable tanto por tablero como por deluxe
+void dibujarInterfazClasica(Pieza* piezaSiguiente, Tablero* tablero)
+{
+    if(piezaSiguiente == NULL || tablero == NULL)
+        return;
+
+    int anchoTableroEnPixels = tablero->ancho * cache_tamBloque;
+    int bordeDerechoTablero = cache_margenX + anchoTableroEnPixels;
+
+    //Configs generales
+    int margenPanel = 20;
+    int panelX = bordeDerechoTablero + margenPanel;
+    int panelAncho = cache_tamBloque * 6;
+    int altoCajaTexto = cache_tamBloque * 3;
+    int separacionY = 15;
+
+    //Caja de la siguiente pieza
+    int cajaSiguienteY = cache_margenY;
+    int cajaSiguienteAlto = cache_tamBloque * 5;
+
+    dibujarRecuadro(panelX, cajaSiguienteY, panelAncho, cajaSiguienteAlto, COLOR_GRIS_OSCURO);
+    dibujarPiezaSiguiente(piezaSiguiente, panelX, panelAncho, cajaSiguienteY, cajaSiguienteAlto);
+
+    // --- CAJA 2: SCORE (PUNTOS) ---
+    int cajaScoreY = cajaSiguienteY + cajaSiguienteAlto + separacionY;
+    dibujarRecuadro(panelX, cajaScoreY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+
+    // --- CAJA 3: LEVEL (NIVEL) ---
+    int cajaLevelY = cajaScoreY + altoCajaTexto + separacionY;
+    dibujarRecuadro(panelX, cajaLevelY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+
+    // --- CAJA 4: LINES (L�NEAS) ---
+    int cajaLinesY = cajaLevelY + altoCajaTexto + separacionY;
+    dibujarRecuadro(panelX, cajaLinesY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+
+}
+
+//REVISAR
+static void dibujarRecuadro(int x, int y, int ancho, int alto, uint8_t color)
+{
+    //Lineas horizontales (superior, inferior)
+    for(int i = 0; i < ancho; i++)
+    {
+        gbt_dibujar_pixel(x + i, y, color);
+        gbt_dibujar_pixel(x + i, y + alto - 1, color);
+    }
+
+    //Lineas verticales (izquierda, derecha)
+    for(int i = 0; i < alto; i++)
+    {
+        gbt_dibujar_pixel(x, y + i, color);
+        gbt_dibujar_pixel(x + ancho - 1, y + i, color);
+    }
+}
+
+static void dibujarPiezaSiguiente(Pieza* piezaSiguiente, int panelX, int panelAncho, int cajaSiguienteY, int cajaSiguienteAlto)
+{
+    for(int i = 1; i < cajaSiguienteAlto - 1; i++)
+    {
+        for(int j = 1; j < panelAncho - 1; j++)
+        {
+            gbt_dibujar_pixel(panelX + j, cajaSiguienteY + i, COLOR_NEGRO);
+        }
+    }
+
+    int minX = piezaSiguiente->tam;
+    int maxX = -1;
+    int minY = piezaSiguiente->tam;
+    int maxY = -1;
+
+    for(int i = 0; i < piezaSiguiente->tam; i++)
+    {
+        for(int j = 0; j < piezaSiguiente->tam; j++)
+            {
+                if(piezaSiguiente->matrizDeForma[i][j] != 0)
+                {
+                    if(j < minX) minX = j;
+                    if(j > maxX) maxX = j;
+                    if(i < minY) minY = i;
+                    if(i > maxY) maxY = i;
+                }
+            }
+    }
+
+    int anchoVisualBloques = maxX - minX + 1;
+    int altoVisualBloques = maxY - minY + 1;
+
+    int anchoVisualPixels = anchoVisualBloques * cache_tamBloque;
+    int altoVisualPixels = altoVisualBloques * cache_tamBloque;
+
+    int startX = panelX + (panelAncho - anchoVisualPixels) / 2;
+    int startY = cajaSiguienteY + (cajaSiguienteAlto - altoVisualPixels) / 2;
+
+    for(int i = 0; i < piezaSiguiente->tam; i++)
+    {
+        for(int j = 0; j < piezaSiguiente->tam; j++)
+            {
+                if(piezaSiguiente->matrizDeForma[i][j] != 0)
+                {
+                    int bloqueX = startX + (j - minX) * cache_tamBloque;
+                    int bloqueY = startY + (i - minY) * cache_tamBloque;
+
+                    dibujarBloque(bloqueX, bloqueY, cache_tamBloque, piezaSiguiente->color, COLOR_BLANCO);
+                }
+            }
     }
 }

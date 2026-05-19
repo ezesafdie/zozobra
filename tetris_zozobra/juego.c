@@ -176,6 +176,8 @@ void dibujarJuegoClasico(int anchoVentana, int altoVentana)
 
         dibujarPiezaFantasma(anchoVentana, altoVentana);
         dibujarPiezaActiva(&piezaActual, &tablero, anchoVentana, altoVentana);
+
+        dibujarInterfazClasica(&piezaSiguiente, &tablero);
     }
 }
 
