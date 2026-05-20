@@ -168,7 +168,9 @@ EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJueg
 
 void dibujarJuegoClasico(int anchoVentana, int altoVentana)
 {
-    gbt_borrar_backbuffer(0); // Negro
+    //gbt_borrar_backbuffer(18); // Negro
+    //dibujarFondoTexturadoConLineas(anchoVentana, altoVentana);
+    dibujarFondoTexturadoConCuadrados(anchoVentana, altoVentana);
 
     if (tableroInicializado)
     {

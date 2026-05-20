@@ -5,6 +5,7 @@
 #define COLOR_NEGRO       0
 #define COLOR_GRIS_OSCURO 8
 #define COLOR_BLANCO      15
+#define COLOR_GRIS_CLARO  7
 
 #define BLOQUES_TOTALES_CON_MARGEN 22
 
@@ -15,13 +16,17 @@ static int cache_altoVentana = -1;
 static int cache_tamBloque = 0;
 static int cache_margenX = 0;
 static int cache_margenY = 0;
+static int cache_anchoTablero = -1;
+static int cache_altoTablero = -1;
 
+//TODO: Esta funcion probablemente no tenga que ser static en el futuro. Se puede usar en muchas pantallas.
 static void dibujarRecuadro(int x, int y, int ancho, int alto, uint8_t color);
 static void dibujarPiezaSiguiente(Pieza* piezaSiguiente, int panelX, int panelAncho, int cajaSiguienteY, int cajaSiguienteAlto);
 
 static void actualizarCacheSiEsNecesario(Tablero* t, int anchoVentana, int altoVentana)
 {
-    if (cache_anchoVentana != anchoVentana || cache_altoVentana != altoVentana)
+    if (cache_anchoVentana != anchoVentana || cache_altoVentana != altoVentana ||
+        cache_anchoTablero != t->ancho || cache_altoTablero != t->alto)
     {
         cache_anchoVentana = anchoVentana;
         cache_altoVentana = altoVentana;
@@ -34,6 +39,7 @@ static void actualizarCacheSiEsNecesario(Tablero* t, int anchoVentana, int altoV
 
 static void dibujarBloque(int coordX, int coordY, int tam, uint8_t colorRelleno, uint8_t colorBorde)
 {
+    /*
     for (int i = 0; i < tam; i++)
     {
         for (int j = 0; j < tam; j++)
@@ -48,6 +54,40 @@ static void dibujarBloque(int coordX, int coordY, int tam, uint8_t colorRelleno,
                 // Pintamos el relleno
                 gbt_dibujar_pixel(coordX + j, coordY + i, colorRelleno);
             }
+        }
+    }
+    */
+
+    for(int i = 0; i < tam; i++)
+    {
+        for(int j = 0; j < tam; j++)
+        {
+            gbt_dibujar_pixel(coordX + j, coordY + i, colorRelleno);
+        }
+    }
+
+    //Diferenciamos el tablero
+    if(colorRelleno == COLOR_NEGRO)
+    {
+        for(int i = 0; i < tam; i++)
+        {
+            gbt_dibujar_pixel(coordX + i, coordY, colorBorde); // Arriba
+            gbt_dibujar_pixel(coordX, coordY + i, colorBorde); // Izquierda
+            gbt_dibujar_pixel(coordX + i, coordY + tam - 1, colorBorde); // Abajo
+            gbt_dibujar_pixel(coordX + tam - 1, coordY + i, colorBorde); // Derecha
+        }
+    }
+    else
+    {
+        for(int i = 0; i < tam - 1; i++)
+        {
+            gbt_dibujar_pixel(coordX + i, coordY, COLOR_BLANCO);
+            gbt_dibujar_pixel(coordX, coordY + i, COLOR_BLANCO);
+        }
+        for(int i = 0; i < tam; i++)
+        {
+            gbt_dibujar_pixel(coordX + i, coordY + tam - 1, COLOR_NEGRO);
+            gbt_dibujar_pixel(coordX + tam - 1, coordY + i, COLOR_NEGRO);
         }
     }
 }
@@ -112,51 +152,70 @@ void dibujarInterfazClasica(Pieza* piezaSiguiente, Tablero* tablero)
         return;
 
     int anchoTableroEnPixels = tablero->ancho * cache_tamBloque;
-    int bordeDerechoTablero = cache_margenX + anchoTableroEnPixels;
 
     //Configs generales
     int margenPanel = 20;
-    int panelX = bordeDerechoTablero + margenPanel;
     int panelAncho = cache_tamBloque * 6;
     int altoCajaTexto = cache_tamBloque * 3;
     int separacionY = 15;
 
-    //Caja de la siguiente pieza
+
+    //PANEL DERECHO
+    int panelDerechoX = cache_margenX + anchoTableroEnPixels + margenPanel;
+
+    //Preview siguiente pieza
     int cajaSiguienteY = cache_margenY;
     int cajaSiguienteAlto = cache_tamBloque * 5;
 
-    dibujarRecuadro(panelX, cajaSiguienteY, panelAncho, cajaSiguienteAlto, COLOR_GRIS_OSCURO);
-    dibujarPiezaSiguiente(piezaSiguiente, panelX, panelAncho, cajaSiguienteY, cajaSiguienteAlto);
+    dibujarRecuadro(panelDerechoX, cajaSiguienteY, panelAncho, cajaSiguienteAlto, COLOR_GRIS_OSCURO);
+    dibujarPiezaSiguiente(piezaSiguiente, panelDerechoX, panelAncho, cajaSiguienteY, cajaSiguienteAlto);
 
-    // --- CAJA 2: SCORE (PUNTOS) ---
-    int cajaScoreY = cajaSiguienteY + cajaSiguienteAlto + separacionY;
-    dibujarRecuadro(panelX, cajaScoreY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+    //Nivel actual
+    int cajaLevelY = cajaSiguienteY + cajaSiguienteAlto + separacionY;
+    dibujarRecuadro(panelDerechoX, cajaLevelY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
 
-    // --- CAJA 3: LEVEL (NIVEL) ---
-    int cajaLevelY = cajaScoreY + altoCajaTexto + separacionY;
-    dibujarRecuadro(panelX, cajaLevelY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
-
-    // --- CAJA 4: LINES (L�NEAS) ---
+    //Lineas borradas
     int cajaLinesY = cajaLevelY + altoCajaTexto + separacionY;
-    dibujarRecuadro(panelX, cajaLinesY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+    dibujarRecuadro(panelDerechoX, cajaLinesY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+
+    //Piezas caidas
+    int cajaCaidasY = cajaLinesY + altoCajaTexto + separacionY;
+    dibujarRecuadro(panelDerechoX, cajaCaidasY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+
+    // PANEL IZQUIERDO
+    int panelIzquierdoX = cache_margenX - margenPanel - panelAncho;
+    if(panelIzquierdoX >= 0)
+    {
+        int cajaScoreY = cache_margenY;
+        dibujarRecuadro(panelIzquierdoX, cajaScoreY, panelAncho, altoCajaTexto, COLOR_GRIS_OSCURO);
+
+        int cajaHistoricoY = cajaScoreY + altoCajaTexto + separacionY;
+        int cajaHistoricoAlto = (cache_tamBloque * 8) + separacionY;
+        dibujarRecuadro(panelIzquierdoX, cajaHistoricoY, panelAncho, cajaHistoricoAlto, COLOR_GRIS_OSCURO);
+    }
+
 
 }
 
 //REVISAR
 static void dibujarRecuadro(int x, int y, int ancho, int alto, uint8_t color)
 {
-    //Lineas horizontales (superior, inferior)
     for(int i = 0; i < ancho; i++)
     {
-        gbt_dibujar_pixel(x + i, y, color);
-        gbt_dibujar_pixel(x + i, y + alto - 1, color);
+        gbt_dibujar_pixel(x + i, y, COLOR_GRIS_CLARO);
     }
-
-    //Lineas verticales (izquierda, derecha)
     for(int i = 0; i < alto; i++)
     {
-        gbt_dibujar_pixel(x, y + i, color);
-        gbt_dibujar_pixel(x + ancho - 1, y + i, color);
+        gbt_dibujar_pixel(x, y + i, COLOR_GRIS_CLARO);
+    }
+
+    for(int i = 0; i < ancho; i++)
+    {
+        gbt_dibujar_pixel(x + i, y + alto - 1, COLOR_GRIS_OSCURO);
+    }
+    for(int i = 0; i < alto; i++)
+    {
+        gbt_dibujar_pixel(x + ancho - 1, y + i, COLOR_GRIS_OSCURO);
     }
 }
 
@@ -212,3 +271,47 @@ static void dibujarPiezaSiguiente(Pieza* piezaSiguiente, int panelX, int panelAn
             }
     }
 }
+
+void dibujarFondoTexturadoConLineas(int anchoVentana, int altoVentana)
+{
+    uint8_t colorBase = COLOR_NEGRO;
+    uint8_t colorTramado = 1;
+    int grosorLinea = 5; // Líneas de 3 píxeles de alto
+
+    for (int y = 0; y < altoVentana; y++)
+    {
+        // Alterna colores cada 3 píxeles
+        uint8_t colorFila = ((y / grosorLinea) % 2 == 0) ? colorTramado : colorBase;
+
+        for (int x = 0; x < anchoVentana; x++)
+        {
+            gbt_dibujar_pixel(x, y, colorFila);
+        }
+    }
+}
+
+void dibujarFondoTexturadoConCuadrados(int anchoVentana, int altoVentana)
+{
+    uint8_t colorBase = COLOR_NEGRO;
+    uint8_t colorTramado = 1;
+
+    // Agrandamos el "píxel" del patrón a 4x4
+    int tamPatron = 8;
+
+    for (int y = 0; y < altoVentana; y++)
+    {
+        for (int x = 0; x < anchoVentana; x++)
+        {
+            // Dividimos por el tamaño del patrón para escalar la grilla
+            if (((x / tamPatron) + (y / tamPatron)) % 2 == 0)
+            {
+                gbt_dibujar_pixel(x, y, colorTramado);
+            }
+            else
+            {
+                gbt_dibujar_pixel(x, y, colorBase);
+            }
+        }
+    }
+}
+
