@@ -36,6 +36,7 @@
 			<Add library="release/GBT_v2026.1C.01/lib/libgbt.a" />
 			<Add directory="release/GBT_v2026.1C.01/lib" />
 		</Linker>
+		<Unit filename="codigos_retorno.h" />
 		<Unit filename="estados.h" />
 		<Unit filename="fin_juego.c">
 			<Option compilerVar="CC" />
@@ -49,6 +50,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="juego.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="menu_principal.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -57,9 +61,21 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="pausa.h" />
-		<Unit filename="main.c">
+		<Unit filename="render.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="render.h" />
+		<Unit filename="tablero.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tablero.h" />
+		<Unit filename="tetris_zozobra.cbp" />
+		<Unit filename="tetris_zozobra.depend" />
+		<Unit filename="tetris_zozobra.layout" />
+		<Unit filename="tetromino.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tetromino.h" />
 		<Unit filename="utils.c">
 			<Option compilerVar="CC" />
 		</Unit>
