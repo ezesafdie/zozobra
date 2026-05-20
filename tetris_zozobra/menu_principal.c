@@ -5,7 +5,7 @@ EstadoJuego procesarMenuPrincipal(eGBT_Tecla tecla, EstadoJuego estadoActual)
 {
     switch (tecla)
     {
-    case GBTK_1:
+    case GBTK_ESPACIO:
         printf("Cambiando a estado: JUEGO_CLASICO\n");
         return ESTADO_JUEGO_CLASICO;
     case GBTK_2:
