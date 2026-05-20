@@ -5,6 +5,11 @@
 #include "tetromino.h"
 #include "tablero.h"
 
+//TODO: Definir bien estas constantes
+#define PIEZAS_POR_NIVEL 2
+#define VELOCIDAD_INICIAL 0.3
+#define FACTOR_INCREMENTO_VELOCIDAD 0.97 //Un 3% mas rapido
+
 EstadoJuego procesarJuego(eGBT_Tecla tecla, EstadoJuego estadoActual, EstadoJuego* estadoPrevioPausa);
 void dibujarJuegoClasico(int anchoVentana, int altoVentana);
 void dibujarJuegoDX(int anchoVentana, int altoVentana);
